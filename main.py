@@ -1,4 +1,7 @@
+##before THE while
+
 import random
+from art import logo
 
 #####creation des fonctions
 # def pl_win():
@@ -43,10 +46,13 @@ def sup21WithAnAce(pl_cards_pt, pl_draw):
     
 #eleven = sup21WithAnAce(pl_cards_sum)
 
-#6. If the ace counts as a 1 instead of 11, are they still over 21?  !!!!!!!!!!
 def aceAsOne_Sup21(pl_cards_pt, is_sup21WithAnAce):
     if is_sup21WithAnAce == True and pl_cards_pt > 21:
+        continue_to_play = False 
         print("You lose")
+
+#6. If the ace counts as a 1 instead of 11, are they still over 21?  !!!!!!!!!!
+
 
 
 #7. Ask the user if they want to get another card. Draw another card
@@ -77,19 +83,33 @@ def bust(pl, cp):
     if pl > 21:
         print("You lose by bust")
         continue_to_play = False 
-    elif cp > 21:       
+    if cp > 21:       
         print("You win, computer has a bust")
         continue_to_play = False 
-    else:
-        blackjack_control(pl, cp)
+
 
 
 #10. Compare user score with computer score to see if user score is higher?
 
+def comparePlCp_scores(pl, cp):
+    if pl > cp:
+        print(f"At the end of the game : You win with {pl} points, computer lose with {cp} points")
+    elif pl < cp:
+        print(f"At the end of the game : You lose with {pl} points, computer wins with {cp} points")
+    else:
+        print(f"At the end of the game : It's a draw with {pl} points at both sides")
 
-
-
-
+11# end game or play again 
+def endGame_Play():
+    player_decision = input("Do you want to play a game of BlackJack? Type 'y' or 'n': ").lower()
+    if player_decision == "y" or "yes":
+        continue_to_play = True
+        print(logo)
+    if player_decision == "n" or "no":
+        print("Bye ! Have a great day!")
+        continue_to_play = False
+    else :
+        print("Sorry, I didn't understand your answer")
 
 
 
@@ -101,6 +121,7 @@ def bust(pl, cp):
 #wanna_play = input("Do you want to play a game of Blackjack? Type 'y' or 'n': ")
 #1. The user and computer should each get 2 random cards.
 #2. Add up the user's and the computer's scores
+endGame_Play()
 
 pl_draw = draw_card(2) 
 pl_total_points = cards_sum(pl_draw)
@@ -123,7 +144,7 @@ aceAsOne_Sup21(pl_total_points, is_sup21WithAnAce)
 pl_pointsInf17(pl_total_points)
 pl_total_points = cards_sum(pl_draw)
 print(f"Your cards : {pl_draw}, current score: {pl_total_points}")
-instantFail = bust(pl_total_points, cp_total_points)
+instantFail_Victory = bust(pl_total_points, cp_total_points)
 pl_ask_another_card(1)
 
 
@@ -132,9 +153,12 @@ cp_pointsInf17(cp_total_points)
 cp_total_points = cards_sum(cp_draw)
 print(cp_total_points)
 
-#9. Has computer gone over 21? Burst
-instantFail = bust(pl_total_points, cp_total_points)
+#9. Has computer gone over 21 or reach a blackjack : Burst
+instantFail_Victory = bust(pl_total_points, cp_total_points)
 
+blackjack_control(pl_total_points, cp_total_points)
 
+#10. Compare user score with computer score to see if user score is higher?
+comparePlCp_scores(pl_total_points, cp_total_points)
 
-#9. gone over 21?
+endGame_Play()
