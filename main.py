@@ -1,5 +1,3 @@
-##before THE while
-
 import random
 from art import logo
 
@@ -10,46 +8,49 @@ from art import logo
 
 #1. The user and computer should each get 2 random cards.
 def draw_card(nb_card): 
-    """ Draw cards.. yes, really"""
+    """ Draw the number of cards you need"""
     cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10] #set de depart
-    pl_deck = []
+    deck = []
     for element in range(nb_card):
-        pl_deck.append(random.choice(cards))
-    return pl_deck
+        deck.append(random.choice(cards))
+    return deck
 
 #2. Add up the user's and the computer's scores
 def cards_sum(draw):
+    """Return the sum of the draw variable list """
     sum = 0
     for card in draw:
         sum += card
     return sum
 
  #3. Does the user or computer have a blackjack? (ace + 10)
-def blackjack_control(pl_cards_pt, cp_cards_pt):
-    if pl_cards_pt == 21: #blackjack
+def blackjack_control(draw):
+    """control if blackjack or not, with ace = 1 or ace = 11"""
+    if cards_sum(draw) == 21 and len(draw) == 2: #blackjack
         #stop_game
         print("You win with a black jack")
         continue_to_play = False
-    elif cp_cards_pt == 21:
-        print("You lose, computer has a black jack")
-        continue_to_play = False 
-    else:
-        continue_to_play = True
+    if 11 in draw and cards_sum(draw) > 21:
+        draw.remove(11)
+        draw.append(1)
+    return cards_sum(draw)
+# def calculate_score(cards):
+#     if 11 in cards and 10 in cards and len(cards) == 2: #real Black jack definition 
 
 #4. Is user's score over 21 ?
 #5. Do you have an "Ace" ?
-def sup21WithAnAce(pl_cards_pt, pl_draw):
-    if pl_cards_pt > 21:
-        for card in pl_draw:
-            if card == 11:
-                return True
+# def sup21WithAnAce(pl_cards_pt, pl_draw):
+#     if pl_cards_pt > 21 and 11 in 
+#         for card in pl_draw:
+#             if card == 11:
+#                 return True
     
 #eleven = sup21WithAnAce(pl_cards_sum)
 
-def aceAsOne_Sup21(pl_cards_pt, is_sup21WithAnAce):
-    if is_sup21WithAnAce == True and pl_cards_pt > 21:
-        continue_to_play = False 
-        print("You lose")
+# def aceAsOne_Sup21(pl_cards_pt, is_sup21WithAnAce):
+#     if is_sup21WithAnAce == True and pl_cards_pt > 21:
+#         continue_to_play = False 
+#         print("You lose")
 
 #6. If the ace counts as a 1 instead of 11, are they still over 21?  !!!!!!!!!!
 
@@ -57,10 +58,14 @@ def aceAsOne_Sup21(pl_cards_pt, is_sup21WithAnAce):
 
 #7. Ask the user if they want to get another card. Draw another card
 def pl_ask_another_card(nb):
+    """add a nb of cards to the player's deck if the player chose yes"""
     ask_card = input("Do you want to get another card? Type 'y' or 'n': ").lower()
+    if ask_card == "n":
+        continue_to_play = False 
     if ask_card == "y":
         pl_draw.extend(draw_card(nb)) #player now has 3 cards
     return pl_draw
+    
 
 #8. if score is less than 17, keep drawing cards.
 # def pl_pointsInf17(pl): # n'est pas utilisé
@@ -99,13 +104,13 @@ def comparePlCp_scores(pl, cp):
     else:
         print(f"At the end of the game : It's a draw with {pl} points at both sides")
 
-11# end game or play again 
-def endGame_Play():
+#11 end game or play again 
+def start_game():
     player_decision = input("Do you want to play a game of BlackJack? Type 'y' or 'n': ").lower()
-    if player_decision == "y" or "yes":
+    if player_decision == "y" or player_decision =="yes":
         continue_to_play = True
         print(logo)
-    if player_decision == "n" or "no":
+    if player_decision == "n" or player_decision =="no":
         print("Bye ! Have a great day!")
         continue_to_play = False
     else :
@@ -121,7 +126,7 @@ def endGame_Play():
 #wanna_play = input("Do you want to play a game of Blackjack? Type 'y' or 'n': ")
 #1. The user and computer should each get 2 random cards.
 #2. Add up the user's and the computer's scores
-endGame_Play()
+start_game()
 
 pl_draw = draw_card(2) 
 pl_total_points = cards_sum(pl_draw)
@@ -132,13 +137,13 @@ cp_total_points = cards_sum(cp_draw)
 print(f"Computer's first card is {cp_draw[0]} {cp_draw[1]} ")
 
 #3. Does the user or computer have a blackjack? (ace + 10)
-blackjack_control(pl_total_points, cp_total_points)
-
+blackjack_control(pl_draw)
+blackjack_control(cp_draw)
 #4. Is user's score over 21 ? #5. Do you have an "Ace" ?
-is_sup21WithAnAce = sup21WithAnAce(pl_total_points, pl_draw)
+#is_sup21WithAnAce = sup21WithAnAce(pl_total_points, pl_draw)
 
 #6. If the ace counts as a 1 instead of 11, are they still over 21?
-aceAsOne_Sup21(pl_total_points, is_sup21WithAnAce)
+#aceAsOne_Sup21(pl_total_points, is_sup21WithAnAce)
 
 #7. Ask the user if they want to get another card. Draw another card
 pl_pointsInf17(pl_total_points)
@@ -156,9 +161,10 @@ print(cp_total_points)
 #9. Has computer gone over 21 or reach a blackjack : Burst
 instantFail_Victory = bust(pl_total_points, cp_total_points)
 
-blackjack_control(pl_total_points, cp_total_points)
+blackjack_control(pl_total_points)
+blackjack_control(cp_total_points)
 
 #10. Compare user score with computer score to see if user score is higher?
 comparePlCp_scores(pl_total_points, cp_total_points)
 
-endGame_Play()
+start_game()
